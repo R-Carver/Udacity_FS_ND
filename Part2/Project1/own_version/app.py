@@ -8,6 +8,7 @@ import babel
 from flask import Flask, render_template, request, Response, flash, redirect, url_for
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
@@ -127,8 +128,7 @@ def index():
 
 @app.route('/venues')
 def venues():
-  # TODO: replace with real venues data.
-  #       num_shows should be aggregated based on number of upcoming shows per venue.
+  
   venues = Venue.query.all()
   cities = []
   states = []
@@ -137,8 +137,6 @@ def venues():
       cities.append(venue.city)
     if venue.state not in states:
       states.append(venue.state)
-  #print(cities)
-  #print(states)
 
   showsUpcomeing = Show.query.filter(Show.start_time > '2020-01-25').all()
   showsPast = Show.query.filter(Show.start_time < '2020-01-25').all()
@@ -146,7 +144,7 @@ def venues():
   data2 = []
   index = 0
   for city in cities:
-    #print(index)
+    
     data2.append({
       "city": city,
       "state": Venue.query.filter_by(city=city).first().state
@@ -164,47 +162,17 @@ def venues():
     index = index + 1
   
   print(data2)
-
-  #test count
-  #shows = Show.query.filter(Show.start_time > '2020-01-25').all()
-  #print(shows)
-
-  """ shows = Show.query.filter(Show.venue_id == 3, Show.start_time > '2020-01-25').all()
-  print(shows)
-  print(len(shows)) """
-
-  """ data=[{
-    "city": "San Francisco",
-    "state": "CA",
-    "venues": [{
-      "id": 1,
-      "name": "The Musical Hop",
-      "num_upcoming_shows": 0,
-    }, {
-      "id": 3,
-      "name": "Park Square Live Music & Coffee",
-      "num_upcoming_shows": 1,
-    }]
-  }, {
-    "city": "New York",
-    "state": "NY",
-    "venues": [{
-      "id": 2,
-      "name": "The Dueling Pianos Bar",
-      "num_upcoming_shows": 0,
-    }]
-  }] """
-  return render_template('pages/venues.html', areas=data2);
+  
+  return render_template('pages/venues.html', areas=data2)
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
-  # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
-  # seach for Hop should return "The Musical Hop".
-  # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
+  
   search_term = request.form.get('search_term', '')
   print(search_term)
-  
-  venues = Venue.query.filter(Venue.name.contains(search_term)).all()
+
+  venues = Venue.query.filter(func.lower(Venue.name).contains(func.lower(search_term))).all()
+  #venues = Venue.query.filter(Venue.name.lower().contains(search_term.lower())).all()
   print(venues)
 
   response = {
@@ -218,13 +186,11 @@ def search_venues():
       "name": venue.name,
       "num_upcoming_shows": len(Show.query.filter(Show.venue_id == venue.id, Show.start_time > '2020-01-25').all())
     })
+
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
-  # shows the venue page with the given venue_id
-  # TODO: replace with real venue data from the venues table, using venue_id
-  #data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
 
   venue = Venue.query.filter_by(id=venue_id).first()
 
@@ -252,24 +218,28 @@ def show_venue(venue_id):
   
   data["past_shows"] = []
   for show in pastShows:
-    artist = Artist.query.filter_by(id=show.id).first()
+    artist = Artist.query.filter_by(id=show.artist_id).first()
     data["past_shows"].append({
       "artist_id": artist.id,
       "artist_name": artist.name,
       "artist_image_link": artist.image_link,
       "start_time": show.start_time.isoformat()
     })
-    
-  # implement future shows
-  # 
-  # 
-  #   
-  #  shows = db.relationship('Show', backref='venue', lazy=True)
+
+  data["upcoming_shows"] = []
+  for show in upcoming_shows:
+    artist = Artist.query.filter_by(id=show.artist_id).first()
+    data["upcoming_shows"].append({
+      "artist_id": artist.id,
+      "artist_name": artist.name,
+      "artist_image_link": artist.image_link,
+      "start_time": show.start_time.isoformat()
+    })
+
+    data["past_shows_count"] = len(pastShows),
+    data["upcoming_shows_count"] = len(upcoming_shows)
 
   return render_template('pages/show_venue.html', venue=data)
-
-#  Create Venue
-#  ----------------------------------------------------------------
 
 @app.route('/venues/create', methods=['GET'])
 def create_venue_form():
@@ -278,133 +248,150 @@ def create_venue_form():
 
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
-  # TODO: insert form data as a new Venue record in the db, instead
-  # TODO: modify data to be the data object returned from db insertion
+  
+  #create the genre array first
+  mylist = request.form.lists()
 
-  # on successful db insert, flash success
-  flash('Venue ' + request.form['name'] + ' was successfully listed!')
-  # TODO: on unsuccessful db insert, flash an error instead.
-  # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
-  # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
+  genres = []
+  for key, value in mylist:
+    if(key == 'genres'):
+      for genre in value:
+        print(genre)
+        out = Genre.query.filter_by(name=genre).first()
+        print(out)
+        if out is not None:
+          genres.append(out) 
+    
+  print(genres)
+
+  formDict = request.form
+
+  error = False
+  try:
+    newVenue = Venue(
+      name=formDict['name'], 
+      city=formDict['city'], 
+      state=formDict['state'], 
+      address=formDict['address'],
+      phone=formDict['phone'],
+      facebook_link=formDict['facebook_link'])
+    
+    #use the prior created genres list
+    newVenue.genres = genres
+
+    db.session.add(newVenue)
+    db.session.commit()
+  except:
+    error = True
+    db.session.rollback()
+    flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed.')
+  finally:
+    db.session.close()
+
+  if error:
+    abort(400)
+  else:
+    flash('Venue ' + request.form['name'] + ' was successfully listed!')
+  
   return render_template('pages/home.html')
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
-  # TODO: Complete this endpoint for taking a venue_id, and using
-  # SQLAlchemy ORM to delete a record. Handle cases where the session commit could fail.
 
-  # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
-  # clicking that button delete it from the db then redirect the user to the homepage
+  try:
+    Venue.query.filter_by(id=venue_id).delete()
+    db.session.commit()
+  except:
+    db.session.rollback()
+  finally:
+    db.session.close()
+
   return None
 
 #  Artists
 #  ----------------------------------------------------------------
 @app.route('/artists')
 def artists():
-  # TODO: replace with real data returned from querying the database
-  data=[{
-    "id": 4,
-    "name": "Guns N Petals",
-  }, {
-    "id": 5,
-    "name": "Matt Quevedo",
-  }, {
-    "id": 6,
-    "name": "The Wild Sax Band",
-  }]
+
+  data=[]
+  artists = Artist.query.all()
+  for artist in artists:
+    data.append({
+      "id": artist.id,
+      "name": artist.name
+    })
+
   return render_template('pages/artists.html', artists=data)
 
 @app.route('/artists/search', methods=['POST'])
 def search_artists():
-  # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
-  # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
-  # search for "band" should return "The Wild Sax Band".
-  response={
-    "count": 1,
-    "data": [{
-      "id": 4,
-      "name": "Guns N Petals",
-      "num_upcoming_shows": 0,
-    }]
+  search_term=request.form.get('search_term', '')
+
+  artists = Artist.query.filter(func.lower(Artist.name).contains(func.lower(search_term))).all()
+
+  response = {
+    "count": len(artists)
   }
+  
+  response['data'] = []
+  for artist in artists:
+    response['data'].append({
+      "id": artist.id,
+      "name": artist.name
+    })
   return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
 @app.route('/artists/<int:artist_id>')
 def show_artist(artist_id):
   # shows the venue page with the given venue_id
   # TODO: replace with real venue data from the venues table, using venue_id
-  data1={
-    "id": 4,
-    "name": "Guns N Petals",
-    "genres": ["Rock n Roll"],
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "326-123-5000",
-    "website": "https://www.gunsnpetalsband.com",
-    "facebook_link": "https://www.facebook.com/GunsNPetals",
-    "seeking_venue": True,
-    "seeking_description": "Looking for shows to perform at in the San Francisco Bay Area!",
-    "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80",
-    "past_shows": [{
-      "venue_id": 1,
-      "venue_name": "The Musical Hop",
-      "venue_image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-      "start_time": "2019-05-21T21:30:00.000Z"
-    }],
-    "upcoming_shows": [],
-    "past_shows_count": 1,
-    "upcoming_shows_count": 0,
+  
+  artist = Artist.query.filter_by(id=artist_id).first()
+
+  data = {
+    "id": artist.id,
+    "name": artist.name,
+    "city": artist.city,
+    "state": artist.state,
+    "phone": artist.phone,
+    "website": artist.website,
+    "facebook_link": artist.facebook_link,
+    "seeking_venue": artist.seeking_venue,
+    "seeking_description": artist.seeking_description,
+    "image_link": artist.image_link
   }
-  data2={
-    "id": 5,
-    "name": "Matt Quevedo",
-    "genres": ["Jazz"],
-    "city": "New York",
-    "state": "NY",
-    "phone": "300-400-5000",
-    "facebook_link": "https://www.facebook.com/mattquevedo923251523",
-    "seeking_venue": False,
-    "image_link": "https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80",
-    "past_shows": [{
-      "venue_id": 3,
-      "venue_name": "Park Square Live Music & Coffee",
-      "venue_image_link": "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=747&q=80",
-      "start_time": "2019-06-15T23:00:00.000Z"
-    }],
-    "upcoming_shows": [],
-    "past_shows_count": 1,
-    "upcoming_shows_count": 0,
-  }
-  data3={
-    "id": 6,
-    "name": "The Wild Sax Band",
-    "genres": ["Jazz", "Classical"],
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "432-325-5432",
-    "seeking_venue": False,
-    "image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-    "past_shows": [],
-    "upcoming_shows": [{
-      "venue_id": 3,
-      "venue_name": "Park Square Live Music & Coffee",
-      "venue_image_link": "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=747&q=80",
-      "start_time": "2035-04-01T20:00:00.000Z"
-    }, {
-      "venue_id": 3,
-      "venue_name": "Park Square Live Music & Coffee",
-      "venue_image_link": "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=747&q=80",
-      "start_time": "2035-04-08T20:00:00.000Z"
-    }, {
-      "venue_id": 3,
-      "venue_name": "Park Square Live Music & Coffee",
-      "venue_image_link": "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=747&q=80",
-      "start_time": "2035-04-15T20:00:00.000Z"
-    }],
-    "past_shows_count": 0,
-    "upcoming_shows_count": 3,
-  }
-  data = list(filter(lambda d: d['id'] == artist_id, [data1, data2, data3]))[0]
+
+  genres = Genre.query.filter(Genre.artists.any(id=artist.id)).all()
+  data["genres"] = []
+  for genre in genres:
+    data["genres"].append(genre.name)
+
+  pastShows = Show.query.filter(Show.artist_id == artist.id, Show.start_time < '2020-01-25').all()
+  upcoming_shows = Show.query.filter(Show.artist_id == artist.id, Show.start_time > '2020-01-25').all()
+  
+  data["past_shows"] = []
+  for show in pastShows:
+    venue = Venue.query.filter_by(id=show.venue_id).first()
+    data["past_shows"].append({
+      "venue_id": venue.id,
+      "venue_name": venue.name,
+      "venue_image_link": venue.image_link,
+      "start_time": show.start_time.isoformat()
+    })
+
+  data["upcoming_shows"] = []
+  for show in upcoming_shows:
+    venue = Venue.query.filter_by(id=show.venue_id).first()
+    data["upcoming_shows"].append({
+      "venue_id": venue.id,
+      "venue_name": venue.name,
+      "venue_image_link": venue.image_link,
+      "start_time": show.start_time.isoformat()
+    })
+
+    data["past_shows_count"] = len(pastShows),
+    data["upcoming_shows_count"] = len(upcoming_shows)
+  
   return render_template('pages/show_artist.html', artist=data)
 
 #  Update
@@ -412,53 +399,67 @@ def show_artist(artist_id):
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
   form = ArtistForm()
-  artist={
-    "id": 4,
-    "name": "Guns N Petals",
-    "genres": ["Rock n Roll"],
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "326-123-5000",
-    "website": "https://www.gunsnpetalsband.com",
-    "facebook_link": "https://www.facebook.com/GunsNPetals",
-    "seeking_venue": True,
-    "seeking_description": "Looking for shows to perform at in the San Francisco Bay Area!",
-    "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80"
-  }
-  # TODO: populate form with fields from artist with ID <artist_id>
+
+  artist = Artist.query.filter_by(id=artist_id).first()
+
+  form.name.data = artist.name
+  form.city.data = artist.city
+  form.phone.data = artist.phone
+  form.facebook_link.data = artist.facebook_link
+
   return render_template('forms/edit_artist.html', form=form, artist=artist)
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
-  # TODO: take values from the form submitted, and update existing
-  # artist record with ID <artist_id> using the new attributes
+  print(request.form)
 
-  return redirect(url_for('show_artist', artist_id=artist_id))
+  formDict = request.form
+  artist = Artist.query.filter_by(id=artist_id).first()
+  try:
+    artist.name = formDict['name']
+    artist.city = formDict['city']
+    artist.phone = formDict['phone']
+    artist.facebook_link = formDict['facebook_link']
+    db.session.commit()
+  except:
+    db.session.rollback()
+  finally:
+    db.session.close()
+
+  return redirect(url_for('show_artist', artist_id=artist_id))    
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
   form = VenueForm()
-  venue={
-    "id": 1,
-    "name": "The Musical Hop",
-    "genres": ["Jazz", "Reggae", "Swing", "Classical", "Folk"],
-    "address": "1015 Folsom Street",
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "123-123-1234",
-    "website": "https://www.themusicalhop.com",
-    "facebook_link": "https://www.facebook.com/TheMusicalHop",
-    "seeking_talent": True,
-    "seeking_description": "We are on the lookout for a local artist to play every two weeks. Please call us.",
-    "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60"
-  }
-  # TODO: populate form with values from venue with ID <venue_id>
+
+  venue = Venue.query.filter_by(id=venue_id).first()
+
+  form.name.data = venue.name
+  form.city.data = venue.city
+  form.address.data = venue.address
+  form.phone.data = venue.phone
+  form.facebook_link.data = venue.facebook_link
+
   return render_template('forms/edit_venue.html', form=form, venue=venue)
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
-  # TODO: take values from the form submitted, and update existing
-  # venue record with ID <venue_id> using the new attributes
+
+  formDict = request.form
+  venue = Venue.query.filter_by(id=venue_id).first()
+
+  try:
+    venue.name = formDict['name']
+    venue.city = formDict['city']
+    venue.address = formDict['address']
+    venue.phone = formDict['phone']
+    venue.facebook_link = formDict['facebook_link']
+    db.session.commit()
+  except:
+    db.session.rollback()
+  finally:
+    db.session.close()
+  
   return redirect(url_for('show_venue', venue_id=venue_id))
 
 #  Create Artist
@@ -471,14 +472,47 @@ def create_artist_form():
 
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
-  # called upon submitting the new artist listing form
-  # TODO: insert form data as a new Venue record in the db, instead
-  # TODO: modify data to be the data object returned from db insertion
 
-  # on successful db insert, flash success
-  flash('Artist ' + request.form['name'] + ' was successfully listed!')
-  # TODO: on unsuccessful db insert, flash an error instead.
-  # e.g., flash('An error occurred. Artist ' + data.name + ' could not be listed.')
+  #create the genre array first
+  formList = request.form.lists()
+
+  genres = []
+  for key, value in formList:
+    if(key == 'genres'):
+      for genre in value:
+        out = Genre.query.filter_by(name=genre).first()
+        if out is not None:
+          genres.append(out)
+
+  formDict = request.form
+  error = False
+  try:
+    newArtist = Artist(
+      name=formDict['name'],
+      city=formDict['city'], 
+      state=formDict['state'], 
+      phone=formDict['phone'],
+      facebook_link=formDict['facebook_link']
+    ) 
+  
+    #use the previously created genres list
+    newArtist.genres = genres
+
+    db.session.add(newArtist)
+    db.session.commit()
+  except:
+    error = True
+    db.session.rollback()
+    flash('An error occurred. Artist ' + request.form['name'] + ' could not be listed.')
+  finally:
+    db.session.close()
+
+  if error:
+    #abort(400)
+    print("error")
+  else:
+    flash('Artist ' + request.form['name'] + ' was successfully listed!')
+
   return render_template('pages/home.html')
 
 
