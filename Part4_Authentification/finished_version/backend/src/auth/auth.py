@@ -37,7 +37,6 @@ def get_token_auth_header():
     #print(header_parts[1])
     return header_parts[1]
 
-
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         #raise AuthError({
@@ -55,7 +54,6 @@ def check_permissions(permission, payload):
     
     print('Persmissions worked')
     return True
-
 
 def verify_decode_jwt(token):
     #GET THE PUBLI KEY FROM AUTH0
@@ -98,7 +96,6 @@ def verify_decode_jwt(token):
                 audience=API_AUDIENCE,
                 issuer='https://' + AUTH0_DOMAIN + '/'
             )
-
             print('token verified')
             return payload
         
@@ -140,8 +137,3 @@ def requires_auth(permission=''):
 
         return wrapper
     return requires_auth_decorator
-
-#https://coffee-shop-project.eu.auth0.com/authorize?audience=localhost:5000&response_type=token&client_id=l06RhQgmk3vwAVSwuPypxjO3fIrSNdER&redirect_uri=https://localhost:5000/drinks
-
-#manager token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FTTJSVGM0UkRJNFJqazNRVUZHUmtZM056QkRRVUU0UmpJelJUTXlNelZCUWpNek5VWkRRUSJ9.eyJpc3MiOiJodHRwczovL2NvZmZlZS1zaG9wLXByb2plY3QuZXUuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVlNTY5NzZkZmEyOWUxMGQ1Mzk0N2ExOSIsImF1ZCI6ImxvY2FsaG9zdDo1MDAwIiwiaWF0IjoxNTgyNzQyMjAyLCJleHAiOjE1ODI4Mjg2MDIsImF6cCI6ImwwNlJoUWdtazN2d0FWU3d1UHlweGpPM2ZJclNOZEVSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6ZHJpbmtzIiwiZ2V0OmRyaW5rcy1kZXRhaWwiLCJwYXRjaDpkcmlua3MiLCJwb3N0OmRyaW5rcyJdfQ.VvzrtYDRFPtdUWvOGA6ITTnmesR7GS1xn5dqB7VKp781aKV-NQQ4f0gVMI4d9jAza2cBc1JyUrUb45LCoVS1H8o9kUSf18gMsn95NU6B0DD3rSxxGbBYwt4K9swlxqiaEnn6z4FKvOOq6hoC82daiXGmmLswzku5c3lDe4tyV-Hvndj1T_KRRVQsXpljbhk3udMPcdvgi98Rbs5LzWR6xISDUyey8Whhk2fVid1OBtA47xeSWfJMR5Pecy7pOyeXemGwFhfLDppgiazM7iJQG9kLhR36xDWzsMtt0pbBDEwaH8sEz_aNbvX-UHj4V13Y5L9JVJVhcTjD_lioG9wzdw
-#barista token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FTTJSVGM0UkRJNFJqazNRVUZHUmtZM056QkRRVUU0UmpJelJUTXlNelZCUWpNek5VWkRRUSJ9.eyJpc3MiOiJodHRwczovL2NvZmZlZS1zaG9wLXByb2plY3QuZXUuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVlNTY5NzE2ZmEyOWUxMGQ1Mzk0NzkxOCIsImF1ZCI6ImxvY2FsaG9zdDo1MDAwIiwiaWF0IjoxNTgyNzQyNDcxLCJleHAiOjE1ODI4Mjg4NzEsImF6cCI6ImwwNlJoUWdtazN2d0FWU3d1UHlweGpPM2ZJclNOZEVSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6ZHJpbmtzLWRldGFpbCJdfQ.EickFLARbguNEfQjOcL10DsPANFeKz8_Un2YhMe3cwwCQFMylx2JcvvC0sNKH5YhddXACmHz0kIc6YFMUikjDSWdHTDX6KY5CpQ6pYH6CWtDRdA19fUfRfcKnABeNIjmpJEd1oLz7_BMhaE4VXMmshm9DjI8w-KhxAB3uS49IfxMkUY_5fU2wc8M09vHu6UdArS3lpisnEKFknwZgAllNXIJFVlSXXOUFMeKHNmVlv0r-HTvWyIKL14GLrY245Jnlt-oldCSeamRfa3T_5cO06jTv57yiE_eryvKbRJblT9o_J78GoGrTfrgAcJ01FjliY_11NZUk_sczMnv8_AilQ

@@ -13,29 +13,25 @@ CORS(app)
 
 #db_drop_and_create_all()
 
-## ROUTES
-
 @app.route('/drinks', methods=['GET'])
 def get_drinks():
     drinks = Drink.query.all()
-    
     outDrinks = [drink.short() for drink in drinks]
 
     return jsonify({
         'success': True,
-        'drinks' : outDrinks
+        'drinks': outDrinks
     })
 
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
 def get_drinks_detail(payload):
     drinks = Drink.query.all()
-    
     outDrinks = [drink.long() for drink in drinks]
 
     return jsonify({
         'success': True,
-        'drinks' : outDrinks
+        'drinks': outDrinks
     })
 
 @app.route('/drinks', methods=['POST'])
@@ -60,10 +56,7 @@ def create_drink(payload):
             recipeString = recipeString + "}]"
         except Exception as e:
             print(e)
-        
-        print("recipeString" + recipeString)
-
-
+  
         try:
             drink = Drink(title=new_title, recipe=recipeString)
             drink.insert()
@@ -73,7 +66,7 @@ def create_drink(payload):
         drink.insert()
 
         return jsonify({
-            'success':True,
+            'success': True,
             'drinks': drink.short()
         })
     except:
@@ -87,7 +80,6 @@ def update_drinks(payload, drink_id):
 
         #get the drink from the request
         old_drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
-        print(old_drink)
 
         try:
             if new_drink.get('title', None) is not None:
@@ -127,12 +119,11 @@ def delete_drink(payload, drink_id):
 
         return jsonify({
             'success': True,
-            'delete' : drink_id
+            'delete': drink_id
         })
     except:
         abort(422)
 
-## Error Handling
 '''
 Example error handling for unprocessable entity
 '''
