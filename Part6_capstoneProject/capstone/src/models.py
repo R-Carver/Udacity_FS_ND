@@ -38,6 +38,12 @@ class Player(db.Model):
     def update(self):
         db.session.commit()
 
+    def format(self):
+        return {
+            'name': self.name,
+            'skill': self.skill
+        }
+
 class Team(db.Model):
     __tablename__ = 'team'
 
@@ -56,3 +62,9 @@ class Team(db.Model):
 
     def update(self):
         db.session.commit()
+
+    def format(self):
+        return {
+            'name': self.name,
+            'city': self.city
+        }
