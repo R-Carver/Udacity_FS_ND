@@ -1,0 +1,189 @@
+{
+	"info": {
+		"_postman_id": "d0e59e66-a261-4b0f-bc73-577f4b30f7f1",
+		"name": "test_auth_sportsapp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin/get player no auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "45ccfe26-5ec3-44c4-abaa-9c491ec53fec",
+						"exec": [
+							"pm.test(\"Get Player with invalid auth\", function(){",
+							"    pm.response.to.have.status(401);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/players",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin/get players with auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "45ccfe26-5ec3-44c4-abaa-9c491ec53fec",
+						"exec": [
+							"pm.test(\"Get Player with valid auth\", function(){",
+							"    pm.response.to.have.status(200);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FTTJSVGM0UkRJNFJqazNRVUZHUmtZM056QkRRVUU0UmpJelJUTXlNelZCUWpNek5VWkRRUSJ9.eyJpc3MiOiJodHRwczovL2NvZmZlZS1zaG9wLXByb2plY3QuZXUuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVlNmE1YThiODE4OGU5MGQxYWY3YTUzZSIsImF1ZCI6ImxvY2FsaG9zdDo1MDAwIiwiaWF0IjoxNTg0MDI5NDYzLCJleHAiOjE1ODQxMTU4NjMsImF6cCI6ImwwNlJoUWdtazN2d0FWU3d1UHlweGpPM2ZJclNOZEVSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6cGxheWVyIiwiZ2V0OnBsYXllcnMiLCJnZXQ6dGVhbXMiLCJwYXRjaDp0ZWFtIiwicG9zdDpwbGF5ZXJzIl19.Y_Mh9czSWLtQJmPBcX8ZXgaNhq7gyaAW3jG-wfNWE3jTK8AvVfv4kEPHc5U05BcE0PAReku3M_-njxV33hJ-NSmiWQkdvuSjUeUYHcMM0UNQfzyOZ9ricJD35JSlGR4dV-Zu_BWhygMK8jMqD0QE_o2fn-Vxy26Jh2gN0_6Q4tZaCN2QV6s0VKllPTSfCZQ1I77Sy4MJeu5gGMPhzJdXrkAjLyRQOQqc4rX_ozuzXCdB0Yu9zDQxH7PqMBgYOwplnUW11D5SwD-4X4aLj5ZhgltgxgCZp-cMFj9W1JnJ1UudZ7GKawaP78IDilOVp4jUvyoPfUwq96dMc0vMuUX0PQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/players",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User/get team no auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ebd9a649-a36b-4d51-b66e-6ac913ae7a31",
+						"exec": [
+							"pm.test(\"Get Team with invalid auth\", function(){",
+							"    pm.response.to.have.status(401);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/teams",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User/get team with auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ebd9a649-a36b-4d51-b66e-6ac913ae7a31",
+						"exec": [
+							"pm.test(\"Get Team with valid auth\", function(){",
+							"    pm.response.to.have.status(200);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FTTJSVGM0UkRJNFJqazNRVUZHUmtZM056QkRRVUU0UmpJelJUTXlNelZCUWpNek5VWkRRUSJ9.eyJpc3MiOiJodHRwczovL2NvZmZlZS1zaG9wLXByb2plY3QuZXUuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVlNmE1YWViODE4OGU5MGQxYWY3YTVlOCIsImF1ZCI6ImxvY2FsaG9zdDo1MDAwIiwiaWF0IjoxNTg0MDI5NTg0LCJleHAiOjE1ODQxMTU5ODQsImF6cCI6ImwwNlJoUWdtazN2d0FWU3d1UHlweGpPM2ZJclNOZEVSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6cGxheWVycyIsImdldDp0ZWFtcyJdfQ.KA2JDttO7wtexaoq_APjiq-fglnzGvT2vRWOaSBUtDiuqOglj6MuBBEZwnlUJWTMkFxOitM5bA1GotHeHgGXlTHO1piTH-n2roOEtMwAtRsWnRy4zIgkJ2XUxI0p2rw7T-biktgEua5msnoc5J6yKUjzpRgjPjHKmqwn7-edxSZWYKPG0dWU7upY07bCXvxDDGTYzM86JJtiYB4hrMAvAYjOY3HqyrCr8W6m3z-QuNYlLhEK4ZbY69-4riR3EZSYD5WF1c7Ht5kfKJy5kP5UTkE9YJwbtGR9i2hRfXZERYKVv6Hm93e73bkT6T1of-R0p0pJ8m5anTgc90MIurLZrw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/teams",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"teams"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
