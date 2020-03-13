@@ -1,0 +1,193 @@
+{
+	"info": {
+		"_postman_id": "d0e59e66-a261-4b0f-bc73-577f4b30f7f1",
+		"name": "test_auth_sportsapp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin/get player no auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "45ccfe26-5ec3-44c4-abaa-9c491ec53fec",
+						"exec": [
+							"pm.test(\"Get Player with invalid auth\", function(){",
+							"    pm.response.to.have.status(401);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://fsnd-david-test02.herokuapp.com/players",
+					"protocol": "https",
+					"host": [
+						"fsnd-david-test02",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin/get players with auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "45ccfe26-5ec3-44c4-abaa-9c491ec53fec",
+						"exec": [
+							"pm.test(\"Get Player with valid auth\", function(){",
+							"    pm.response.to.have.status(200);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FTTJSVGM0UkRJNFJqazNRVUZHUmtZM056QkRRVUU0UmpJelJUTXlNelZCUWpNek5VWkRRUSJ9.eyJpc3MiOiJodHRwczovL2NvZmZlZS1zaG9wLXByb2plY3QuZXUuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVlNmE1YThiODE4OGU5MGQxYWY3YTUzZSIsImF1ZCI6ImxvY2FsaG9zdDo1MDAwIiwiaWF0IjoxNTg0MTI5OTI3LCJleHAiOjE1ODQyMTYzMjcsImF6cCI6ImwwNlJoUWdtazN2d0FWU3d1UHlweGpPM2ZJclNOZEVSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6cGxheWVyIiwiZ2V0OnBsYXllcnMiLCJnZXQ6dGVhbXMiLCJwYXRjaDp0ZWFtIiwicG9zdDpwbGF5ZXJzIl19.BCXP46c-ofBgNlSloeHr6cyd9w6Ni9UyT84tQEu1tFMZGsZKP4nAtLlGubbwqATLeUY2-EBSY-mgaWq4B3OQDNkaso28iUlXOC0iGrTQWP0MPefgHT5H7Sp3bzXTAh9Cwc9x177Ypkqh64G5eATK69vr8h3GDoc8BRomWjQ0LIRIobQUk7Q3jdAR369-N42eeP2RSHINxXLoLGNe0D6Fxte54PichmYM6B3kEwzQyofetHqBspQM-U_JQMFWQBVf05SJphhMtGEnYFsjSEEujgMUHR5hAKj4Hx_ezFSgwjU4vs_XO0xbfkx7TRxq0dvK8v8_5k4Vt93F-yNavR6FGA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://fsnd-david-test02.herokuapp.com/players",
+					"protocol": "https",
+					"host": [
+						"fsnd-david-test02",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User/get team no auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ebd9a649-a36b-4d51-b66e-6ac913ae7a31",
+						"exec": [
+							"pm.test(\"Get Team with invalid auth\", function(){",
+							"    pm.response.to.have.status(401);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://fsnd-david-test02.herokuapp.com/teams",
+					"protocol": "https",
+					"host": [
+						"fsnd-david-test02",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User/get team with auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ebd9a649-a36b-4d51-b66e-6ac913ae7a31",
+						"exec": [
+							"pm.test(\"Get Team with valid auth\", function(){",
+							"    pm.response.to.have.status(200);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FTTJSVGM0UkRJNFJqazNRVUZHUmtZM056QkRRVUU0UmpJelJUTXlNelZCUWpNek5VWkRRUSJ9.eyJpc3MiOiJodHRwczovL2NvZmZlZS1zaG9wLXByb2plY3QuZXUuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVlNmE1YWViODE4OGU5MGQxYWY3YTVlOCIsImF1ZCI6ImxvY2FsaG9zdDo1MDAwIiwiaWF0IjoxNTg0MTMwNTkyLCJleHAiOjE1ODQyMTY5OTIsImF6cCI6ImwwNlJoUWdtazN2d0FWU3d1UHlweGpPM2ZJclNOZEVSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6cGxheWVycyIsImdldDp0ZWFtcyJdfQ.CfKj7RVNFkem-eSEhqlCxdz3Zt19SV4sxxtqCHyf5g0QxJLhsJ5A5THH-bPCh7OBqsPWFfg-qNsCqjoCV--7Yxh1uKqZqyZkvRLeL6jjSZfeJWwvH06xzvYiq6t1H4pV9cFc-EbpM-nCh0Y1Qdr5KXGsdHCsMI2ggGR9q_gCwcKw8Dp-USr_bYMPitHyGzWxwp1vpACPXcIAXd-94svCb0JrSk2l8IYaUexavazTOve1dEtDjwSWZa5rDdx6IKpA4jFTjVEWr0c1wBG96cQgRdqaBLKPWec5oYeyPcxYgySBB0Y61M8tZTVAVO1uZh_J-TKkobPWeRQ3tioUV4EPTw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://fsnd-david-test02.herokuapp.com/teams",
+					"protocol": "https",
+					"host": [
+						"fsnd-david-test02",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"teams"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

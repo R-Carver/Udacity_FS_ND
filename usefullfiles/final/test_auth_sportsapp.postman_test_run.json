@@ -1,0 +1,141 @@
+{
+	"id": "6253198e-dfcc-4114-b239-cb9c3cc996a4",
+	"name": "test_auth_sportsapp",
+	"timestamp": "2020-03-13T20:33:00.003Z",
+	"collection_id": "d0e59e66-a261-4b0f-bc73-577f4b30f7f1",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 4,
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "d4e8a642-84cf-4f38-b3e7-c71019a59c4a",
+			"name": "Admin/get player no auth",
+			"url": "https://fsnd-david-test02.herokuapp.com/players",
+			"time": 449,
+			"responseCode": {
+				"code": 401,
+				"name": "UNAUTHORIZED"
+			},
+			"tests": {
+				"Get Player with invalid auth": true
+			},
+			"testPassFailCounts": {
+				"Get Player with invalid auth": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				449
+			],
+			"allTests": [
+				{
+					"Get Player with invalid auth": true
+				}
+			]
+		},
+		{
+			"id": "d2ed93ad-5b19-4407-ad8e-52ac08b3932e",
+			"name": "Admin/get players with auth",
+			"url": "https://fsnd-david-test02.herokuapp.com/players",
+			"time": 535,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Player with valid auth": true
+			},
+			"testPassFailCounts": {
+				"Get Player with valid auth": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				535
+			],
+			"allTests": [
+				{
+					"Get Player with valid auth": true
+				}
+			]
+		},
+		{
+			"id": "c11fa700-ae8d-4a3a-8d1a-dcc7da606d6c",
+			"name": "User/get team no auth",
+			"url": "https://fsnd-david-test02.herokuapp.com/teams",
+			"time": 114,
+			"responseCode": {
+				"code": 401,
+				"name": "UNAUTHORIZED"
+			},
+			"tests": {
+				"Get Team with invalid auth": true
+			},
+			"testPassFailCounts": {
+				"Get Team with invalid auth": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				114
+			],
+			"allTests": [
+				{
+					"Get Team with invalid auth": true
+				}
+			]
+		},
+		{
+			"id": "d55b8a5a-7428-448d-97af-e73173363c07",
+			"name": "User/get team with auth",
+			"url": "https://fsnd-david-test02.herokuapp.com/teams",
+			"time": 496,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Team with valid auth": true
+			},
+			"testPassFailCounts": {
+				"Get Team with valid auth": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				496
+			],
+			"allTests": [
+				{
+					"Get Team with valid auth": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"collection": {
+		"requests": [
+			{
+				"id": "d4e8a642-84cf-4f38-b3e7-c71019a59c4a",
+				"method": "GET"
+			},
+			{
+				"id": "d2ed93ad-5b19-4407-ad8e-52ac08b3932e",
+				"method": "GET"
+			},
+			{
+				"id": "c11fa700-ae8d-4a3a-8d1a-dcc7da606d6c",
+				"method": "GET"
+			},
+			{
+				"id": "d55b8a5a-7428-448d-97af-e73173363c07",
+				"method": "GET"
+			}
+		]
+	}
+}
